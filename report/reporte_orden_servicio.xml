@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="orden_servicio">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o"> <!--SE RECORRE LA INFORMACION, POR DEFECTO ESTA LLEGA EN 'docs'-->
+                    <t t-call="web.external_layout">
+                        <div class="page">  <!--SE AGREGA PARA QUE AL SELECCIONAR VARIAS PERSONAS ESTE LOS SEPARE UNO POR PERSONA-->
+                            <h2>HOLA MUNDO XD</h2>
+                            <div>
+                                <strong>Orden de Servicio: </strong> <span t-field="o.name"/><br/>
+                                <strong>Cliente: </strong> <span t-field="o.partner_id"/>
+                            </div>
+
+                            <div class="row mt32 mb32">
+                                <div class="col-xs-3">
+                                    <strong>Ubicacion de Salida:</strong>
+                                    <p t-field="o.location_id"/>
+                                </div>
+                                <div class="col-xs-3">
+                                    <strong>Ubicacion de Entrega:</strong>
+                                    <p t-field="o.location_dest_id"/>
+                                </div>
+                                <div class="col-xs-3">
+                                    <strong>Fecha Limite de Entrega:</strong>
+                                    <p t-field="o.guarantee_limit"/>
+                                </div>
+                            </div>
+
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Material</th>
+                                        <th class="text-right">Cantidad</th>
+                                        <th class="text-right">Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody><!--EN EL CASO QUE SEAN CAMPOS RELACIONALES, LLAMAN DE MANERA NORMAL Y SE RECORREN
+                                    PARA MOSTRAR LOS CAMPOS DE LA OTRA TABLA CON LA QUE TIENEN RELACION-->
+                                    <tr t-foreach="o.operations" t-as="line">
+                                        <td>
+                                            <p t-field="line.name"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <p t-field="line.product_uom_qty"/>
+                                        </td>
+                                        <td class="text-right"><!--CON 't-options' SE AGREGA EL FORMATO MONEDA Y OTROS ATRIBUTOS-->
+                                            <p t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="text-right"><!--SE LLAMA AL METODO DEFINIDO CON ANTERIORIDAD CUANDO SE HEREDO EL MODELO-->
+                                <strong>Total Cantidades: </strong> <span t-esc="o.total_cantidades_precios()[0]"/><br/>
+                                <strong>Total Precios: </strong><span t-esc="o.total_cantidades_precios()[1]" t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
